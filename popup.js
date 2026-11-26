@@ -32,8 +32,9 @@ function render() {
   $('muteIcon').querySelector('.wave').style.display = muted ? 'none' : '';
   $('muteIcon').querySelector('.x').style.display = muted ? '' : 'none';
 
-  $('power').className = `power ${on ? 'off' : ''}`;
-  $('powerLabel').textContent = on ? 'Turn TV off' : 'Turn TV on';
+  // Both stay clickable (state reporting can lag); just highlight the current one.
+  $('powerOn').classList.toggle('current', Boolean(tv) && on);
+  $('powerOff').classList.toggle('current', Boolean(tv) && !on);
 }
 
 async function refresh() {
@@ -92,21 +93,18 @@ function wire(tabVideoId) {
     $('presets').append(b);
   }
 
-  $('power').onclick = (e) => {
-    if (isOn()) {
-      act(e.currentTarget, 'Turning off', () =>
-        settings.offScript
-          ? runScript(settings, settings.offScript)
-          : callService(settings, 'media_player', 'turn_off', tvTarget()),
-      );
-    } else {
-      act(e.currentTarget, 'Turning on', () =>
-        settings.onScript
-          ? runScript(settings, settings.onScript)
-          : callService(settings, 'media_player', 'turn_on', tvTarget()),
-      );
-    }
-  };
+  $('powerOn').onclick = (e) =>
+    act(e.currentTarget, 'Turning on', () =>
+      settings.onScript
+        ? runScript(settings, settings.onScript)
+        : callService(settings, 'media_player', 'turn_on', tvTarget()),
+    );
+  $('powerOff').onclick = (e) =>
+    act(e.currentTarget, 'Turning off', () =>
+      settings.offScript
+        ? runScript(settings, settings.offScript)
+        : callService(settings, 'media_player', 'turn_off', tvTarget()),
+    );
 
   if (tabVideoId) {
     $('play').onclick = (e) => act(e.currentTarget, 'Sent to TV', () => playOnTv(settings, tabVideoId));

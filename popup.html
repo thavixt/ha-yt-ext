@@ -113,13 +113,20 @@
         padding: 8px;
       }
       button.power {
-        width: 100%;
-        padding: 8px;
+        padding: 8px 0;
       }
-      button.power.off {
+      button.power.current {
+        background: color-mix(in srgb, var(--ha) 25%, transparent);
+        border-color: var(--ha);
+      }
+      #powerOff {
         color: var(--danger);
       }
-      button.power.off:hover:not(:disabled) {
+      #powerOff:hover:not(:disabled) {
+        border-color: var(--danger);
+      }
+      #powerOff.current {
+        background: color-mix(in srgb, var(--danger) 18%, transparent);
         border-color: var(--danger);
       }
       button.active {
@@ -214,13 +221,23 @@
     </section>
 
     <section>
-      <button class="power" id="power">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2v10" />
-          <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
-        </svg>
-        <span id="powerLabel">…</span>
-      </button>
+      <div class="label">Power</div>
+      <div class="row">
+        <button class="power" id="powerOn" title="Turn TV on">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2v10" />
+            <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
+          </svg>
+          On
+        </button>
+        <button class="power" id="powerOff" title="Turn TV off">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2v10" />
+            <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
+          </svg>
+          Off
+        </button>
+      </div>
     </section>
 
     <footer>
