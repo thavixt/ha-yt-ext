@@ -1,0 +1,10 @@
+{
+  "name": "ha-yt-ext",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "send": "node scripts/send.mjs",
+    "zip": "powershell -NoProfile -Command \"Compress-Archive -Force -Path manifest.json,background.js,options.html,options.js,popup.html,popup.js,lib,icons -DestinationPath ha-yt-ext.zip\""
+  }
+}

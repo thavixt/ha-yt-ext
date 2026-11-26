@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --ha: #03a9f4;
+        --danger: #d93025;
+        --ok: #1e8e3e;
+        --line: #8884;
+        --btn: #8881;
+        font:
+          13px/1.35 system-ui,
+          sans-serif;
+      }
+      body {
+        width: 260px;
+        margin: 0;
+        padding: 12px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      header img {
+        width: 22px;
+        height: 22px;
+      }
+      header .name {
+        font-weight: 600;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .pill {
+        font-size: 11px;
+        padding: 1px 8px;
+        border-radius: 99px;
+        background: var(--btn);
+        white-space: nowrap;
+      }
+      .pill.on {
+        background: color-mix(in srgb, var(--ok) 20%, transparent);
+        color: var(--ok);
+      }
+      .pill.dry {
+        background: color-mix(in srgb, orange 25%, transparent);
+        color: darkorange;
+      }
+      .sub {
+        opacity: 0.65;
+        font-size: 11px;
+        margin: 2px 0 0 30px;
+        min-height: 1.3em;
+      }
+
+      section {
+        border-top: 1px solid var(--line);
+        margin-top: 10px;
+        padding-top: 10px;
+      }
+      .label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        opacity: 0.6;
+        margin-bottom: 6px;
+      }
+      .row {
+        display: flex;
+        gap: 6px;
+      }
+      .row > * {
+        flex: 1;
+      }
+
+      button {
+        font: inherit;
+        border: 1px solid var(--line);
+        background: var(--btn);
+        color: inherit;
+        border-radius: 6px;
+        padding: 7px 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      button:hover:not(:disabled) {
+        border-color: var(--ha);
+      }
+      button:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      button.big {
+        font-size: 18px;
+        line-height: 1;
+        padding: 6px 0;
+      }
+      button.primary {
+        background: var(--ha);
+        border-color: var(--ha);
+        color: #fff;
+        width: 100%;
+        padding: 8px;
+      }
+      button.power {
+        width: 100%;
+        padding: 8px;
+      }
+      button.power.off {
+        color: var(--danger);
+      }
+      button.power.off:hover:not(:disabled) {
+        border-color: var(--danger);
+      }
+      button.active {
+        background: color-mix(in srgb, var(--ha) 25%, transparent);
+        border-color: var(--ha);
+      }
+      .presets {
+        margin-top: 6px;
+      }
+      .presets button {
+        padding: 4px 0;
+        font-size: 12px;
+      }
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .title {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 11px;
+      }
+      #status {
+        min-height: 1.3em;
+        flex: 1;
+      }
+      #status.err {
+        color: var(--danger);
+      }
+      #status.ok {
+        color: var(--ok);
+      }
+      #settings {
+        color: inherit;
+        opacity: 0.6;
+        text-decoration: none;
+      }
+      #settings:hover {
+        opacity: 1;
+      }
+      [hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="icons/icon32.png" alt="" />
+      <span class="name" id="tvName">TV</span>
+      <span class="pill dry" id="dryPill" hidden>dry run</span>
+      <span class="pill" id="statePill">…</span>
+    </header>
+    <div class="sub" id="source"></div>
+
+    <section id="playSection" hidden>
+      <div class="label">This tab</div>
+      <div class="title" id="tabTitle"></div>
+      <button class="primary" id="play">▶ Play on TV</button>
+    </section>
+
+    <section>
+      <div class="label">Volume</div>
+      <div class="row">
+        <button class="big tv-on" id="volDown" title="Volume down">−</button>
+        <button class="tv-on" id="mute" title="Mute">
+          <svg viewBox="0 0 24 24" id="muteIcon">
+            <path d="M11 5 6 9H2v6h4l5 4V5z" />
+            <path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7" />
+            <path class="x" d="m22 9-6 6m0-6 6 6" style="display: none" />
+          </svg>
+        </button>
+        <button class="big tv-on" id="volUp" title="Volume up">+</button>
+      </div>
+      <!-- Filled from the "Volume presets" setting -->
+      <div class="row presets" id="presets"></div>
+    </section>
+
+    <section>
+      <button class="power" id="power">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2v10" />
+          <path d="M18.4 6.6a9 9 0 1 1-12.8 0" />
+        </svg>
+        <span id="powerLabel">…</span>
+      </button>
+    </section>
+
+    <footer>
+      <span id="status"></span>
+      <a href="#" id="settings">Settings</a>
+    </footer>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
