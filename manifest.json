@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Play on TV (Home Assistant)",
   "version": "0.1.0",
-  "description": "Right-click a YouTube link to play it on the TV through a Home Assistant script.",
+  "description": "Unofficial. Right-click a YouTube link to play it on the TV through a Home Assistant script.",
   "permissions": ["contextMenus", "storage", "notifications", "activeTab"],
   "optional_host_permissions": ["http://*/*", "https://*/*"],
   "background": {

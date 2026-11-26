@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { extractVideoId } from '../lib/youtube.js';
 
-const ID = 'mKCieTImjvU';
+const ID = 'dQw4w9WgXcQ';
 
 const valid = [
   `https://www.youtube.com/watch?v=${ID}`,
